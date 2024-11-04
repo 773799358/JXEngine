@@ -1,6 +1,12 @@
-#include <Windows.h>
+ï»¿#include <Windows.h>
 #include <stdio.h>
 #include <iostream>
+
+// è¿™äº›æ˜¯ä¾èµ–çš„ä¸€äº›libï¼Œåœ¨é¡¹ç›®å±æ€§ä¸­çš„è¿æ¥å™¨->è¾“å…¥->é™„åŠ ä¾èµ–é¡¹æ·»åŠ ä¹Ÿå¯ä»¥
+#pragma comment(lib, "dxguid.lib")
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d3d12.lib")
+#pragma comment(lib, "d3dcompiler.lib")
 
 #define WINDOW_TITLE	TEXT("Engine Toy")
 
@@ -16,25 +22,25 @@ int g_nShowCmd = 0;
 HWND g_hwnd = 0;
 
 /// <summary>
-/// ÏûÏ¢»Øµ÷º¯Êı
+/// æ¶ˆæ¯å›è°ƒå‡½æ•°
 /// </summary>
-/// <param name="hwnd">´°¿Ú</param>
-/// <param name="message">ÏûÏ¢ÀàĞÍ</param>
-/// <param name="wParam">ÏûÏ¢µÄ¾ßÌåÄÚÈİ</param>
-/// <param name="lParam">ÏûÏ¢µÄ¾ßÌåÄÚÈİ</param>
+/// <param name="hwnd">çª—å£</param>
+/// <param name="message">æ¶ˆæ¯ç±»å‹</param>
+/// <param name="wParam">æ¶ˆæ¯çš„å…·ä½“å†…å®¹</param>
+/// <param name="lParam">æ¶ˆæ¯çš„å…·ä½“å†…å®¹</param>
 /// <returns>result</returns>
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-// ³õÊ¼»¯´°¿Ú
+// åˆå§‹åŒ–çª—å£
 void InitWindow();
 
-// ³õÊ¼»¯³ÌĞò
+// åˆå§‹åŒ–ç¨‹åº
 void Init();
 
-// ¸üĞÂ»æÖÆÊı¾İ
+// æ›´æ–°ç»˜åˆ¶æ•°æ®
 void UpdateScene();
 
-// ½øĞĞÂß¼­´¦Àí
+// è¿›è¡Œé€»è¾‘å¤„ç†
 void Run();
 
 int main()
@@ -55,7 +61,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (wParam == VK_ESCAPE)	// esc
 		{
 			DestroyWindow(hwnd);
-			PostQuitMessage(0);	// ·¢ËÍÒ»¸öWM_QUITÏûÏ¢
+			PostQuitMessage(0);	// å‘é€ä¸€ä¸ªWM_QUITæ¶ˆæ¯
 		}
 		else if (wParam == VK_LEFT)
 			g_posX -= 1.0f;
@@ -73,7 +79,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 void InitWindow()
 {
-	// ×¢²á´°¿ÚÀà
+	// æ³¨å†Œçª—å£ç±»
 	WNDCLASSEX wndClass = { 0 };
 	wndClass.cbSize = sizeof(WNDCLASSEX);
 	wndClass.style = CS_HREDRAW | CS_VREDRAW;
@@ -94,22 +100,22 @@ void InitWindow()
 		return;
 	}
 
-	// ´´½¨´°¿Ú
+	// åˆ›å»ºçª—å£
 	g_hwnd = CreateWindow(TEXT("JXEngine"), // class name
 		WINDOW_TITLE, // window title 
 		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, g_windowWidth, g_windowHeight, nullptr, nullptr, g_hInstance, nullptr);
 
 	if (!g_hwnd)
 	{
-		// ÓÃmessage box¿ÉÒÔ½øĞĞ×èÈû£¬Ö±µ½µã»÷£¬±È½ÏºÃÓÃÓÚµ÷ÊÔÊä³ö
+		// ç”¨message boxå¯ä»¥è¿›è¡Œé˜»å¡ï¼Œç›´åˆ°ç‚¹å‡»ï¼Œæ¯”è¾ƒå¥½ç”¨äºè°ƒè¯•è¾“å‡º
 		MessageBox(0, TEXT("CreawteWindow Faild."), 0, 0);
 		return;
 	}
 
-	// ´°¿ÚÒÆ¶¯£¬ÏÔÊ¾£¬¸üĞÂ
+	// çª—å£ç§»åŠ¨ï¼Œæ˜¾ç¤ºï¼Œæ›´æ–°
 	MoveWindow(g_hwnd, 250, 80, g_windowWidth, g_windowHeight, true);
 	ShowWindow(g_hwnd, SW_SHOWNORMAL);
-	UpdateWindow(g_hwnd); // ±ğÍü¼ÇĞŞ¸ÄÍêÖµ£¬Òª¶Ô´°¿Ú½øĞĞ¸üĞÂ£¬Ò»°ãShowWindowÖ®ºó¼ÇµÃµ÷ÓÃ¼´¿É
+	UpdateWindow(g_hwnd); // åˆ«å¿˜è®°ä¿®æ”¹å®Œå€¼ï¼Œè¦å¯¹çª—å£è¿›è¡Œæ›´æ–°ï¼Œä¸€èˆ¬ShowWindowä¹‹åè®°å¾—è°ƒç”¨å³å¯
 }
 
 void Init()
@@ -138,15 +144,15 @@ void DrawScene()
 
 void Run()
 {
-	// ¶¨ÒåÏûÏ¢½á¹¹Ìå£¬¿ªÊ¼ÏûÏ¢Ñ­»·£¬²»³õÊ¼»¯ÓĞ¾¯¸æ
+	// å®šä¹‰æ¶ˆæ¯ç»“æ„ä½“ï¼Œå¼€å§‹æ¶ˆæ¯å¾ªç¯ï¼Œä¸åˆå§‹åŒ–æœ‰è­¦å‘Š
 	MSG msg = { 0 };
 
-	while (msg.message != WM_QUIT)	// ÍË³öÏûÏ¢
+	while (msg.message != WM_QUIT)	// é€€å‡ºæ¶ˆæ¯
 	{
-		if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))	// ²é¿´ÏûÏ¢¶ÓÁĞÀïÃæÊÇ·ñÓĞĞÅÏ¢£¬ÓĞÏûÏ¢¾Í»á·ÅÈëmsgÖĞ£¬Ã»ÓĞ¾Í»á·µ»Ø0
+		if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))	// æŸ¥çœ‹æ¶ˆæ¯é˜Ÿåˆ—é‡Œé¢æ˜¯å¦æœ‰ä¿¡æ¯ï¼Œæœ‰æ¶ˆæ¯å°±ä¼šæ”¾å…¥msgä¸­ï¼Œæ²¡æœ‰å°±ä¼šè¿”å›0
 		{
-			TranslateMessage(&msg);	// »á½øĞĞÏûÏ¢µÄÔ¤´¦Àí£¬Ëµ°×ÁË¾ÍÊÇÉáÆúÒ»Ğ©Ã»ÓÃµÄĞÅÏ¢
-			DispatchMessage(&msg);	// ·¢ËÍµ½´°¿Ú´¦Àíº¯Êı£¬wndClass.lpfnWndProc = DefWindowProc£¬ÕâÀïÖ¸¶¨³ÉÏµÍ³Ä¬ÈÏµÄÏûÏ¢´¦Àí³ÌĞò£¬Proc = Procedure£¬Ò²¿ÉÒÔÖ¸¶¨×Ô¼ºµÄÏûÏ¢´¦Àíº¯Êı
+			TranslateMessage(&msg);	// ä¼šè¿›è¡Œæ¶ˆæ¯çš„é¢„å¤„ç†ï¼Œè¯´ç™½äº†å°±æ˜¯èˆå¼ƒä¸€äº›æ²¡ç”¨çš„ä¿¡æ¯
+			DispatchMessage(&msg);	// å‘é€åˆ°çª—å£å¤„ç†å‡½æ•°ï¼ŒwndClass.lpfnWndProc = DefWindowProcï¼Œè¿™é‡ŒæŒ‡å®šæˆç³»ç»Ÿé»˜è®¤çš„æ¶ˆæ¯å¤„ç†ç¨‹åºï¼ŒProc = Procedureï¼Œä¹Ÿå¯ä»¥æŒ‡å®šè‡ªå·±çš„æ¶ˆæ¯å¤„ç†å‡½æ•°
 		}
 		else
 		{
